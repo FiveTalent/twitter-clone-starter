@@ -1,38 +1,84 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.tweet {
+  border: 1px solid #ccc;
+  width: 564px;
+  min-height: 68px;
+  padding: 10px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-family: "Helvetica", arial, sans-serif;
+  font-size: 14px;
+  line-height: 18px;
 }
 
-.App-link {
-  color: #61dafb;
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 5px;
+  margin-right: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.name {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  margin-right: 0.3em;
+}
+
+.handle {
+  color: #8899a6;
+  font-size: 13px;
+}
+
+.time {
+  padding-left: 0.3em;
+  color: #8899a6;
+}
+
+.time::before {
+  content: "\00b7";
+  padding-right: 0.3em;
+}
+
+.buttons {
+  margin-top: 10px;
+  margin-left: 2px;
+  font-size: 1.4em;
+  color: #aab8c2;
+}
+
+.reply-button, .retweet-button, .like-button, .more-options-button {
+  width: 80px;
+  display: inline-block;
+}
+
+.like-count, .retweet-count {
+  position: relative;
+  bottom: 2px;
+  font-size: 13px;
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+.newTweet {
+  border: 1px solid #ccc;
+  width: 564px;
+  min-height: 68px;
+  padding: 10px;
+  display: flex;
+  font-family: "Helvetica", arial, sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.content {
+  width: 100%;
+  padding: .5rem;
+}
+
+.content:focus {
+  outline: none;
+}
+
+.tweet-button {
+  border: 1px solid #ccc;
+  padding: .5rem;
+  margin-left: .5rem;
 }
