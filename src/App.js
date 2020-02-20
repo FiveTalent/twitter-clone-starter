@@ -1,13 +1,63 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 import NewTweet from './components/NewTweet/NewTweet';
 import Media from './components/Media/Media';
 import Tweet from './components/Tweet/Tweet';
+import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
+import { withAuthenticator } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
+import awsconfig from './aws-exports';
+import * as mutations from './graphql/mutations';
+import './App.css';
+
+Amplify.configure(awsconfig);
+
+const listTweetsQuery = `query listTweets {
+  listTweets {
+    items {
+      id
+      message
+      user {
+        id
+        name
+        gravatar
+        handle
+      }
+    }
+  }
+}`;
 
 function App() {
   const [tweets, setTweets] = useState([]);
-
   const [activeRoute, setActiveRoute] = useState('tweets');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    listTweets();
+  }, []);
+
+  useEffect(() => {
+    Auth.currentAuthenticatedUser()
+      .then(user => setUser(user))
+      .catch(() => console.log("Not signed in"));
+  }, []);
+
+  const addTweet = async (message) => {
+    try {
+      const input = {
+        message: message,
+        tweetUserId: user.attributes.sub // get this from current logged in user.
+      }
+
+      await API.graphql(graphqlOperation(mutations.createTweet, { input: input })); // Using imported mustation from generated file
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const listTweets = async () => {
+    const allTweets = await API.graphql(graphqlOperation(listTweetsQuery)); // Using our custom query 'listTweetsQuery'
+
+    setTweets(allTweets.data.listTweets.items);
+  }
 
   const changeRoute = route => {
     setActiveRoute(route);
@@ -16,10 +66,11 @@ function App() {
   const renderActiveRoute = () => {
     if (activeRoute === 'tweets') {
       return (
-        <React.Fragment>
-          <NewTweet />
-          <Tweet tweet={testTweet} />
-        </React.Fragment>
+        <>
+          <NewTweet addTweet={addTweet} />
+
+          {tweets.map(tweet => <Tweet tweet={tweet} key={tweet.id} />)}
+        </>
       );
     }
 
@@ -38,17 +89,4 @@ function App() {
   );
 }
 
-const testTweet = {
-  message: "Something about cats.",
-  user: {
-    name: "IAMA Cat Person",
-    handle: "catperson",
-    gravatar: "xyz",
-    identity: "us-west-2-234mlfkjerlkm"
-  },
-  likes: 2,
-  retweets: 17,
-  timestamp: "2016-07-30 21:24:37"
-};
-
-export default App;
+export default withAuthenticator(App, true);

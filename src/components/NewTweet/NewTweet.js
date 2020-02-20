@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 
-function NewTweet () {
+function NewTweet ({ addTweet }) {
   const [newTweet, setNewTweet] = useState('');
 
   const handleChange = (event) => {
     setNewTweet(event.target.value);
   }
 
-  const handleClick = () => {
+  const handleClick = (event) => {
     console.log(newTweet);
+
+    addTweet(newTweet);
 
     setNewTweet('');
   }
