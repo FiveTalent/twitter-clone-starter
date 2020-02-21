@@ -1,0 +1,16 @@
+type User @model {
+	id: ID!
+	name: String
+	handle: String
+	gravatar: String
+	tweets: [Tweet] @connection(name: "UserTweets")
+}
+
+type Tweet @model {
+	id: ID!
+	message: String!
+    likes: Int
+	retweets: Int
+	timestamp: AWSDateTime
+	user: User @connection(name: "UserTweets")
+}
